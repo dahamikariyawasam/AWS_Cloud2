@@ -57,9 +57,7 @@ const AlertsView = ({ alerts }) => {
           filter: brightness(1.07);
           box-shadow: 0 12px 28px rgba(0,0,0,.35);
         }
-        .refresh-btn:active {
-          transform: translateY(0);
-        }
+        .refresh-btn:active { transform: translateY(0); }
 
         /* Summary cards row */
         .alerts-summary {
@@ -114,10 +112,20 @@ const AlertsView = ({ alerts }) => {
           color: #eee;
         }
 
+        /* === Make UNRESOLVED cards appear 2 per row === */
         .alerts-list {
           display: grid;
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 12px;
+        }
+        /* Resolved alerts span the full width; unresolved occupy one column */
+        .alert-item.resolved   { grid-column: 1 / -1; }
+        .alert-item.unresolved { grid-column: auto; }
+
+        @media (max-width: 820px){
+          /* On small screens, stack everything */
+          .alerts-list { grid-template-columns: 1fr; }
+          .alert-item.resolved { grid-column: auto; }
         }
 
         .alert-item {
@@ -195,26 +203,12 @@ const AlertsView = ({ alerts }) => {
           display: grid;
           gap: 6px;
         }
-        .issue-detected {
-          font-weight: 800;
-          color: #fff;
-        }
-        .alert-message {
-          color: #e6e6ff;
-          opacity: .9;
-        }
+        .issue-detected { font-weight: 800; color: #fff; }
+        .alert-message  { color: #e6e6ff; opacity: .9; }
 
-        .alert-status {
-          margin-top: 10px;
-        }
-        .status-resolved {
-          color: #8ef0a5;
-          font-weight: 800;
-        }
-        .status-unresolved {
-          color: #ffb84d;
-          font-weight: 800;
-        }
+        .alert-status { margin-top: 10px; }
+        .status-resolved   { color: #8ef0a5; font-weight: 800; }
+        .status-unresolved { color: #ffb84d; font-weight: 800; }
       `}</style>
 
       <div className="alerts-header">

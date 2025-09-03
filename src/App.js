@@ -276,9 +276,11 @@ const MainContent = () => {
           <div className="footer-content">
             {/* Company Info */}
             <div className="footer-section">
-              <h6>🏥 MediSys Diagnostics Ltd.</h6>
-              <p>Real-time Patient Monitoring Dashboard</p>
-              <p><span className="system-status">● System Online</span></p>
+              <h6>MediSys Diagnostics Ltd.</h6>
+              <p>Health Analytics and Monitoring Dashboard</p>
+              <p>This dashboard provides a continuous overview of patient health, 
+                ensuring that vital signs and clinical data are updated in real time.</p>
+              <p><span className="system-status">Online System </span></p>
             </div>
 
             {/* Quick Links */}

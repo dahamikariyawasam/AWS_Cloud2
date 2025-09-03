@@ -91,16 +91,22 @@ const DashboardView = ({ stats, alerts, onNavigate, patients }) => {
           border: 1px solid rgba(255,255,255,0.07);
         }
 
+        /* Original 4-col grid left as-is (not used below) */
         .ui-grid {
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: 14px;
         }
-        @media (max-width: 1100px) {
-          .ui-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+        /* NEW: 2-column row grid for the stats cards */
+        .ui-grid-two {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 14px;
+          margin-bottom: 14px;
         }
         @media (max-width: 640px) {
-          .ui-grid { grid-template-columns: 1fr; }
+          .ui-grid-two { grid-template-columns: 1fr; }
         }
 
         .ui-card {
@@ -161,9 +167,7 @@ const DashboardView = ({ stats, alerts, onNavigate, patients }) => {
         .stat-label { color: var(--muted); }
         .stat-value { font-weight: 700; }
 
-        .ui-critical {
-          margin-top: 18px;
-        }
+        .ui-critical { margin-top: 18px; }
         .ui-section-title {
           margin: 0 0 10px 0;
           font-size: 18px;
@@ -209,42 +213,48 @@ const DashboardView = ({ stats, alerts, onNavigate, patients }) => {
 
       {/* ===== Header ===== */}
       <div className="ui-header">
-        <h2 className="ui-title">Dashboard</h2>
+        <h2 className="ui-title">Monitoring Panel</h2>
         <div className="ui-accent-pill">Realtime Monitoring</div>
       </div>
 
       {/* ===== Content Wrapper ===== */}
       <div className="dashboard-content ui-content">
-        {/* ===== Stats Grid ===== */}
-        <div className="stats-grid ui-grid">
-          <div
-            className="stat-card ui-card clickable"
-            onClick={() => onNavigate && onNavigate('patients')}
-          >
-            <h3 className="ui-card-title">Total Patients</h3>
-            <p className="ui-metric">{stats?.total_patients || totalPatients}</p>
+        {/* ===== Stats in two rows, two cards per row ===== */}
+        <div className="stats-grid">
+          {/* Row 1: Total Patients + Active Patients */}
+          <div className="ui-grid-two">
+            <div
+              className="stat-card ui-card clickable"
+              onClick={() => onNavigate && onNavigate('patients')}
+            >
+              <h3 className="ui-card-title">Total Patients</h3>
+              <p className="ui-metric">{stats?.total_patients || totalPatients}</p>
+            </div>
+
+            <div className="stat-card ui-card">
+              <h3 className="ui-card-title">Active Patients</h3>
+              <p className="ui-metric success">{stats?.active_patients || activePatients}</p>
+            </div>
           </div>
 
-          <div className="stat-card ui-card">
-            <h3 className="ui-card-title">Active Patients</h3>
-            <p className="ui-metric success">{stats?.active_patients || activePatients}</p>
-          </div>
+          {/* Row 2: Critical Alerts + Unresolved Alerts */}
+          <div className="ui-grid-two">
+            <div
+              className="stat-card ui-card clickable"
+              onClick={() => onNavigate && onNavigate('alerts')}
+            >
+              <h3 className="ui-card-title">Critical Alerts Today</h3>
+              <p className="ui-metric danger">
+                {stats?.critical_alerts_today || criticalAlertsToday}
+              </p>
+            </div>
 
-          <div
-            className="stat-card ui-card clickable"
-            onClick={() => onNavigate && onNavigate('alerts')}
-          >
-            <h3 className="ui-card-title">Critical Alerts Today</h3>
-            <p className="ui-metric danger">
-              {stats?.critical_alerts_today || criticalAlertsToday}
-            </p>
-          </div>
-
-          <div className="stat-card ui-card">
-            <h3 className="ui-card-title">Unresolved Alerts</h3>
-            <p className="ui-metric warning">
-              {stats?.unresolved_alerts || unresolvedAlerts}
-            </p>
+            <div className="stat-card ui-card">
+              <h3 className="ui-card-title">Unresolved Alerts</h3>
+              <p className="ui-metric warning">
+                {stats?.unresolved_alerts || unresolvedAlerts}
+              </p>
+            </div>
           </div>
         </div>
 

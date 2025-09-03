@@ -57,97 +57,92 @@ const TestCenter = ({ patients }) => {
           letter-spacing: .3px;
         }
 
-        .patients-grid {
-          display: grid;
-          grid-template-columns: repeat(4, minmax(0,1fr));
-          gap: 12px;
+        /* TABLE STYLES */
+        .table-responsive{
+          width: 100%;
+          overflow: auto;
+          border-radius: 12px;
         }
-        @media (max-width: 1200px) {
-          .patients-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+        .patients-table{
+          width: 100%;
+          min-width: 820px;
+          border-collapse: separate;
+          border-spacing: 0;
+          background: rgba(10,10,20,0.25);
+          border: 1px solid rgba(255,255,255,0.10);
+          border-radius: 12px;
+          overflow: hidden;
         }
-        @media (max-width: 900px) {
-          .patients-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-        }
-        @media (max-width: 560px) {
-          .patients-grid { grid-template-columns: 1fr; }
-        }
-
-        .patient-card {
-          border: 1px solid rgba(255,255,255,0.14);
-          border-radius: 14px;
-          padding: 12px;
-          background: rgba(10,10,20,0.28);
-          box-shadow: 0 12px 30px rgba(0,0,0,0.45);
-          transition: transform .12s ease, background .2s ease, border-color .2s ease;
-        }
-        .patient-card:hover {
-          transform: translateY(-2px);
+        .patients-table thead th{
+          position: sticky;
+          top: 0;
           background: rgba(255,255,255,0.08);
-          border-color: rgba(255,255,255,0.2);
+          color: #e9e9ff;
+          text-align: left;
+          padding: 12px;
+          font-size: 13px;
+          text-transform: uppercase;
+          letter-spacing: .35px;
+          border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+        .patients-table tbody td{
+          padding: 12px;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          font-size: 14px;
+        }
+        .patients-table tbody tr:hover{
+          background: rgba(255,255,255,0.06);
         }
 
-        .patient-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-          margin-bottom: 6px;
+        /* Status badge (reuse existing classes) */
+        .status-indicator{
+          padding: 6px 10px;
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.18);
+          font-size: 12px;
+          font-weight: 900;
         }
+        .status-indicator.online{
+          background: rgba(142,240,165,0.16);
+          color:#8ef0a5;
+        }
+        .status-indicator.offline{
+          background: rgba(255,107,107,0.14);
+          color:#ff6b6b;
+        }
+
+        /* Vital chips reused for cell values */
+        .vital{
+          display:inline-flex;
+          align-items:center;
+          gap:6px;
+          padding:6px 10px;
+          border-radius:10px;
+          border:1px solid rgba(255,255,255,0.14);
+          background: rgba(255,255,255,0.06);
+        }
+        .vital-label{
+          font-size:12px;
+          text-transform:uppercase;
+          letter-spacing:.3px;
+          color:#e6e6ff;
+          font-weight:800;
+        }
+        .vital-value{ font-weight:900; }
+        .vital-value.normal{ color:#8ef0a5; }
+        .vital-value.warning{ color:#ffb84d; }
+        .vital-value.critical{ color:#ff6b6b; }
+
         .patient-id {
           font-size: 12px;
           letter-spacing: .3px;
           font-weight: 900;
           color: #dcd6ff;
         }
-        .status-indicator {
-          padding: 4px 8px;
-          border-radius: 999px;
-          border: 1px solid rgba(255,255,255,0.2);
-          font-size: 12px;
-          font-weight: 800;
-        }
-        .status-indicator.online {
-          background: rgba(142,240,165,0.16);
-          color: #8ef0a5;
-        }
-        .status-indicator.offline {
-          background: rgba(255,107,107,0.14);
-          color: #ff6b6b;
-        }
-
         .patient-name {
-          font-size: 16px;
-          font-weight: 800;
-          margin-bottom: 6px;
-        }
-
-        .patient-vitals {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-        }
-        .vital {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 8px 10px;
-          border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.14);
-          background: rgba(255,255,255,0.06);
-        }
-        .vital-label {
-          font-size: 12px;
-          text-transform: uppercase;
-          letter-spacing: .3px;
-          color: #e6e6ff;
+          font-size: 15px;
           font-weight: 800;
         }
-        .vital-value {
-          font-weight: 900;
-        }
-        .vital-value.normal  { color: #8ef0a5; }
-        .vital-value.warning { color: #ffb84d; }
-        .vital-value.critical{ color: #ff6b6b; }
       `}</style>
 
       {/* Headline & description (text changed as requested) */}
@@ -163,52 +158,64 @@ const TestCenter = ({ patients }) => {
         {/* Form unchanged (functional) */}
         <TelemetryForm />
 
-        {/* Current Patients section (styled only) */}
+        {/* Current Patients section (now displayed as a table) */}
         <div className="current-patients">
           <h3>Current Patients</h3>
-          <div className="patients-grid">
+
+          <div className="table-responsive">
             {patients && patients.length > 0 ? (
-              patients.map(patient => (
-                <div key={patient.patient_id} className="patient-card">
-                  <div className="patient-header">
-                    <span className="patient-id">{patient.patient_id}</span>
-                    <span className={`status-indicator ${patient.connection_status.toLowerCase()}`}>
-                      {patient.connection_status}
-                    </span>
-                  </div>
-                  <div className="patient-name">{patient.name}</div>
-                  <div className="patient-vitals">
-                    <div className="vital">
-                      <span className="vital-label">HR:</span>
-                      <span
-                        className={`vital-value ${
-                          patient.heart_rate > 100
-                            ? 'critical'
-                            : patient.heart_rate < 60
-                            ? 'warning'
-                            : 'normal'
-                        }`}
-                      >
-                        {patient.heart_rate || '--'} bpm
-                      </span>
-                    </div>
-                    <div className="vital">
-                      <span className="vital-label">O2:</span>
-                      <span
-                        className={`vital-value ${
-                          patient.oxygen_level < 90
-                            ? 'critical'
-                            : patient.oxygen_level < 95
-                            ? 'warning'
-                            : 'normal'
-                        }`}
-                      >
-                        {patient.oxygen_level || '--'}%
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))
+              <table className="patients-table">
+                <thead>
+                  <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Heart Rate</th>
+                    <th>Oxygen Level</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {patients.map(patient => (
+                    <tr key={patient.patient_id}>
+                      <td><span className="patient-id">{patient.patient_id}</span></td>
+                      <td><span className="patient-name">{patient.name}</span></td>
+                      <td>
+                        <span className={`status-indicator ${patient.connection_status.toLowerCase()}`}>
+                          {patient.connection_status}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="vital">
+                          <span className="vital-label">HR</span>
+                          <span className={`vital-value ${
+                            patient.heart_rate > 100
+                              ? 'critical'
+                              : patient.heart_rate < 60
+                              ? 'warning'
+                              : 'normal'
+                          }`}>
+                            {patient.heart_rate || '--'} {patient.heart_rate ? 'bpm' : ''}
+                          </span>
+                        </span>
+                      </td>
+                      <td>
+                        <span className="vital">
+                          <span className="vital-label">O2</span>
+                          <span className={`vital-value ${
+                            patient.oxygen_level < 90
+                              ? 'critical'
+                              : patient.oxygen_level < 95
+                              ? 'warning'
+                              : 'normal'
+                          }`}>
+                            {patient.oxygen_level || '--'}{patient.oxygen_level ? '%' : ''}
+                          </span>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             ) : (
               <p>No patients available.</p>
             )}
