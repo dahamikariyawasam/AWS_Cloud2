@@ -15,7 +15,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
             className={activeTab === 'dashboard' ? 'active' : ''}
             onClick={(e) => handleTabClick(e, 'dashboard')}
           >
-            Dashboard
+            Home page
           </a>
         </li>
         <li>
@@ -24,7 +24,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
             className={activeTab === 'patients' ? 'active' : ''}
             onClick={(e) => handleTabClick(e, 'patients')}
           >
-            Patients
+            Patients Page
           </a>
         </li>
         <li>
@@ -33,7 +33,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
             className={activeTab === 'alerts' ? 'active' : ''}
             onClick={(e) => handleTabClick(e, 'alerts')}
           >
-            Alerts
+            Alerts Page
           </a>
         </li>
         <li>
@@ -42,7 +42,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
             className={activeTab === 'test' ? 'active' : ''}
             onClick={(e) => handleTabClick(e, 'test')}
           >
-            Test Center
+            Care Monitor
           </a>
         </li>
       </ul>
